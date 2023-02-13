@@ -1,4 +1,4 @@
-# # 성공
+# insert 성공
 # insert into user
 # (account_id, password, nickname, email)
 # values
@@ -17,11 +17,12 @@
 #     ('testㅆㄸ', 'test', 'test', 'test@sdf.com');
 #
 #
-# email 실패
-insert into user
-(account_id, password, nickname, email)
-values
-    ('test123', 'test', 'test', 'test');
+# # email 실패
+# insert into user
+# (account_id, password, nickname, email)
+# values
+#     ('test123', 'test', 'test', 'test');
 
-delete from user;
+# delete from user;
 
+ALTER TABLE user AUTO_INCREMENT = 1;
