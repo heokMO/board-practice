@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.study.boardflab.mybatis.dao.UserDAO">
+    <!--    Create    -->
+    <insert id="create">
+        insert into user
+            (account_id, password, nickname, email)
+        values
+            (#{accountId}, sha2(#{password},256), #{nickname}, #{email})
+    </insert>
+
+    <!--    Read    -->
+    <select id="checkGenerateAccountId" resultType="boolean">
+        SELECT COUNT(*) FROM user WHERE id = #{id}
+    </select>
+
+
+    <select id="checkGenerateNickname" resultType="boolean">
+        SELECT COUNT(*) FROM user WHERE id = #{nickname}
+    </select>
+
+    <!--    Update    -->
+
+
+    <!--    Delete    -->
+    <delete id="deleteAll">
+        delete from user
+    </delete>
+</mapper>

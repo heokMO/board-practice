@@ -1,8 +1,8 @@
 # insert 성공
-# insert into user
-# (account_id, password, nickname, email)
-# values
-#     ('test123', 'test', 'test', 'test@sdf.com');
+insert into user
+(account_id, password, nickname, email)
+values
+    ('test123', 'test', 'test', 'test@sdf.com');
 
 #
 # # account_id 실패
