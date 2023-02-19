@@ -3,7 +3,7 @@ package com.study.boardflab.mybatis.vo;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class UserVO {
+public class UserVO{
     private Long id;
     private String accountId;
     private String password;
@@ -37,7 +37,7 @@ public class UserVO {
         return accountId;
     }
 
-    public String getPassword() {
+    public String getPassword(){
         return password;
     }
 

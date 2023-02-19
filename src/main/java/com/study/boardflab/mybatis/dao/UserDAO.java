@@ -12,4 +12,6 @@ public interface UserDAO {
     void deleteAll();
 
     boolean checkGenerateNickname(String nickname);
+
+    UserVO findByAccountId(String username);
 }
