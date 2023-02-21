@@ -17,4 +17,6 @@ public interface UserService extends UserDetailsService {
 
     @Transactional
     void updateUser(String username, UserUpdateDTO userUpdateDTO);
+
+    void deleteUser(String username);
 }

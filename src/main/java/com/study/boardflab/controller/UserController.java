@@ -43,10 +43,23 @@ public class UserController {
     @PatchMapping
     public void updateUser(@RequestBody UserUpdateDTO userUpdateDTO,
                            @AuthenticationPrincipal User user){
+        checkLogin(user);
+
+        userService.updateUser(user.getUsername(), userUpdateDTO);
+    }
+
+
+
+    @DeleteMapping
+    public void deleteUser(@AuthenticationPrincipal User user){
+        checkLogin(user);
+
+        userService.deleteUser(user.getUsername());
+    }
+
+    private static void checkLogin(User user) {
         if(user == null){
             throw new AuthenticationCredentialsNotFoundException("로그인이 필요합니다");
         }
-
-        userService.updateUser(user.getUsername(), userUpdateDTO);
     }
 }

@@ -62,6 +62,11 @@ public class UserServiceMybatis implements UserService{
     }
 
     @Override
+    public void deleteUser(String username) {
+        userDAO.deleteUser(username);
+    }
+
+    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserVO account = userDAO.findByAccountId(username);
         if(Objects.isNull(account)){

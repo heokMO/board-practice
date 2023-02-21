@@ -30,8 +30,15 @@
         where account_id = #{accountId}
     </update>
 
+    <update id="deleteUser">
+        update user
+        set del_req_time = now()
+        where account_id = #{accountId}
+    </update>
+
     <!--    Delete    -->
     <delete id="deleteAll">
         delete from user
     </delete>
+
 </mapper>

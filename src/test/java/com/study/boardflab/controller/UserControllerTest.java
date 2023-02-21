@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -135,8 +136,21 @@ public class UserControllerTest {
         String url = "http://localhost:" + port + "/user";
         UserUpdateDTO dto = new UserUpdateDTO("test123");
 
+        //when
         mockMvc.perform(patch(url).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(dto)))
+        //then
                 .andExpect(status().isOk());
     }
 
+    @Test
+    @WithMockUser(username = ACCOUNT_ID, password = PASSWORD)
+    public void deleteUserTest() throws Exception{
+        //given
+        String url = "http://localhost:" + port + "/user";
+
+        //when
+        mockMvc.perform(delete(url))
+        //then
+                .andExpect(status().isOk());
+    }
 }
