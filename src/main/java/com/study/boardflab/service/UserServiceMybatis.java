@@ -1,6 +1,7 @@
 package com.study.boardflab.service;
 
 import com.study.boardflab.dto.user.UserCreateDTO;
+import com.study.boardflab.dto.user.UserUpdateDTO;
 import com.study.boardflab.mybatis.dao.UserDAO;
 import com.study.boardflab.mybatis.vo.UserVO;
 import com.study.boardflab.security.AccountContext;
@@ -29,7 +30,7 @@ public class UserServiceMybatis implements UserService{
     }
 
     @Override
-    public Long create(UserCreateDTO userCreateDTO){
+    public void create(UserCreateDTO userCreateDTO){
         UserVO vo = UserVO.builder()
                 .accountId(userCreateDTO.getId())
                 .password(passwordEncoder.encode(userCreateDTO.getPassword()))
@@ -37,7 +38,7 @@ public class UserServiceMybatis implements UserService{
                 .email(userCreateDTO.getEmail())
                 .build();
 
-        return userDAO.create(vo);
+        userDAO.create(vo);
     }
 
     @Override
@@ -48,6 +49,16 @@ public class UserServiceMybatis implements UserService{
     @Override
     public boolean checkGenerateNickname(String nickname) {
         return userDAO.checkGenerateNickname(nickname);
+    }
+
+    @Override
+    public void updateUser(String username, UserUpdateDTO userUpdateDTO) {
+        UserVO vo = UserVO.builder()
+                .accountId(username)
+                .nickname(userUpdateDTO.getNickname())
+                .build();
+
+        userDAO.updateUser(vo);
     }
 
     @Override

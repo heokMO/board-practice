@@ -24,6 +24,11 @@
 
     <!--    Update    -->
 
+    <update id="updateUser">
+        update user
+        set nickname = #{nickname}
+        where account_id = #{accountId}
+    </update>
 
     <!--    Delete    -->
     <delete id="deleteAll">

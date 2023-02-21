@@ -1,10 +1,16 @@
 package com.study.boardflab.controller;
 
 import com.study.boardflab.dto.user.UserCreateDTO;
+import com.study.boardflab.dto.user.UserUpdateDTO;
 import com.study.boardflab.service.UserService;
 import org.apache.ibatis.jdbc.SQL;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
@@ -34,9 +40,13 @@ public class UserController {
     }
 
 
-    @ExceptionHandler(SQLException.class)
-    public ResponseEntity<String> handleSqlException(SQLException exception){
+    @PatchMapping
+    public void updateUser(@RequestBody UserUpdateDTO userUpdateDTO,
+                           @AuthenticationPrincipal User user){
+        if(user == null){
+            throw new AuthenticationCredentialsNotFoundException("로그인이 필요합니다");
+        }
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("잘못된 파라미터 입니다.");
+        userService.updateUser(user.getUsername(), userUpdateDTO);
     }
 }
