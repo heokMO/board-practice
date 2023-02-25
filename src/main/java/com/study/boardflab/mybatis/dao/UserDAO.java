@@ -18,4 +18,6 @@ public interface UserDAO {
     void updateUser(UserVO vo);
 
     void deleteUser(String username);
+
+    Long getId(String username);
 }

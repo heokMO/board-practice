@@ -1,10 +1,11 @@
-package com.study.boardflab.service;
+package com.study.boardflab.mybatis.serviceImpl;
 
 import com.study.boardflab.dto.user.UserCreateDTO;
 import com.study.boardflab.dto.user.UserUpdateDTO;
 import com.study.boardflab.mybatis.dao.UserDAO;
 import com.study.boardflab.mybatis.vo.UserVO;
 import com.study.boardflab.security.AccountContext;
+import com.study.boardflab.service.UserService;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,7 +18,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-public class UserServiceMybatis implements UserService{
+public class UserServiceMybatis implements UserService {
     private static final String DEFAULT_ROLE = "user";
 
     private final UserDAO userDAO;
