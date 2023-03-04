@@ -1,18 +1,19 @@
 package com.study.boardflab.controller;
 
 import com.study.boardflab.dto.post.PostCreateDTO;
+import com.study.boardflab.dto.post.PostListRequestDTO;
+import com.study.boardflab.dto.post.PostListResponseDTO;
+import com.study.boardflab.dto.post.PostReadDTO;
 import com.study.boardflab.service.BoardService;
 import com.study.boardflab.service.PostService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.util.List;
 import java.util.Objects;
 
 @RestController
@@ -29,7 +30,7 @@ public class PostController {
     @PostMapping
     public Long writePost(@RequestBody PostCreateDTO dto,
                            @AuthenticationPrincipal User user){
-        boolean loginRequired = isLoginRequired(dto);
+        boolean loginRequired = isLoginRequired(dto.getBoardId());
 
         checkWriterNull(dto, user, loginRequired);
 
@@ -43,13 +44,39 @@ public class PostController {
         return postService.createPost(dto, username);
     }
 
-    private boolean isLoginRequired(PostCreateDTO dto) {
+    @GetMapping("/list")
+    public List<PostListResponseDTO> getList(@ModelAttribute PostListRequestDTO dto,
+                                             @AuthenticationPrincipal User user){
+
+        checkLoginRequired(user, isLoginRequired(dto.getBoardId()));
+
+        return postService.getList(dto);
+    }
+
+    @GetMapping("/{postId}")
+    public PostReadDTO getPost(@PathVariable Long postId,
+                               @AuthenticationPrincipal User user){
+
+        String username = null;
+        if(user != null){
+            username = user.getUsername();
+        }
+
+        return postService.getPost(postId, username);
+    }
+
+//    @PatchMapping("/post/{postId}")
+//    public void updatePost(@PathVariable Long postId)
+//
+//
+
+
+    private boolean isLoginRequired(int boardNum) {
         try{
-            return boardService.isLoginRequired(dto.getBoardId());
+            return boardService.isLoginRequired(boardNum);
         } catch (NullPointerException exception){
             throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "존재하지 않는 게시판입니다.");
         }
-
     }
 
     private static void checkLoginRequired(User user, boolean loginRequired) {

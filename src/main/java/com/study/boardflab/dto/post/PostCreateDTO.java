@@ -3,8 +3,6 @@ package com.study.boardflab.dto.post;
 import java.io.Serializable;
 
 public class PostCreateDTO implements Serializable {
-
-
     private static final long serialVersionUID = 1L;
 
     public static PostCreateDTOBuilder builder(){

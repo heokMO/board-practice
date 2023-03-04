@@ -10,14 +10,39 @@
         values (#{boardId}, #{title}, #{content}, #{wittenUserId}, #{nonMemNick}, #{nonMemPw})
     </insert>
 
+
     <!--    Read    -->
+    <select id="getList" resultType="com.study.boardflab.dto.post.PostListResponseDTO">
+        SELECT p.id, p.title, u.nickname AS writer, p.written_time AS writtenTime, p.views, COUNT(r.id) AS replys
+        FROM post p
+                 JOIN user u ON p.written_user_id = u.id
+                 LEFT JOIN reply r ON p.id = r.post_id
+        where p.board_id = #{boardId}
+        GROUP BY p.id
+        ORDER BY p.written_time desc
+        LIMIT #{limit}
+            OFFSET #{offset}
+    </select>
+
+    <select id="getPost" resultType="com.study.boardflab.mybatis.vo.PostVO">
+        select p.id, p.board_id as boardId, p.title, p.content, p.written_user_id as wittenUserId, p.non_mem_nick as nonMemNick, p.update_time as updateTime, p.views, u.nickname as writerNickname
+        from post p
+        JOIN USER u on p.written_user_id = u.id
+        where p.id = #{postId}
+    </select>
 
 
     <!--    Update    -->
+    <update id="increaseViews">
+        UPDATE post
+        SET views = views + 1
+        WHERE id = #{postId};
+    </update>
 
     <!--    Delete    -->
     <delete id="deleteAll">
         delete from post
     </delete>
+
 
 </mapper>

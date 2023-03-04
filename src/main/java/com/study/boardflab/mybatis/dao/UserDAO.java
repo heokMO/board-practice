@@ -20,4 +20,6 @@ public interface UserDAO {
     void deleteUser(String username);
 
     Long getId(String username);
+
+    String getUserName(Long id);
 }

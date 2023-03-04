@@ -9,6 +9,7 @@ public class PostVO {
     private String title;
     private String content;
     private Long wittenUserId;
+    private String writerNickname;
     private LocalDateTime writtenTime;
     private LocalDateTime updateTime;
     private Long views;
@@ -18,12 +19,13 @@ public class PostVO {
     public PostVO() {
     }
 
-    public PostVO(Long id, Integer boardId, String title, String content, Long wittenUserId, LocalDateTime writtenTime, LocalDateTime updateTime, Long views, String nonMemNick, String nonMemPw) {
+    public PostVO(Long id, Integer boardId, String title, String content, Long wittenUserId, String writerNickname, LocalDateTime writtenTime, LocalDateTime updateTime, Long views, String nonMemNick, String nonMemPw) {
         this.id = id;
         this.boardId = boardId;
         this.title = title;
         this.content = content;
         this.wittenUserId = wittenUserId;
+        this.writerNickname = writerNickname;
         this.writtenTime = writtenTime;
         this.updateTime = updateTime;
         this.views = views;
@@ -71,6 +73,10 @@ public class PostVO {
         return nonMemPw;
     }
 
+    public String getWriterNickname() {
+        return writerNickname;
+    }
+
     public static PostVOBuilder builder(){
         return new PostVOBuilder();
     }
@@ -88,12 +94,14 @@ public class PostVO {
         return Objects.hash(id);
     }
 
+
     public static final class PostVOBuilder {
         private Long id;
         private Integer boardId;
         private String title;
         private String content;
         private Long wittenUserId;
+        private String writerNickname;
         private LocalDateTime writtenTime;
         private LocalDateTime updateTime;
         private Long views;
@@ -132,6 +140,11 @@ public class PostVO {
             return this;
         }
 
+        public PostVOBuilder writerNickname(String writerNickname) {
+            this.writerNickname = writerNickname;
+            return this;
+        }
+
         public PostVOBuilder writtenTime(LocalDateTime writtenTime) {
             this.writtenTime = writtenTime;
             return this;
@@ -158,7 +171,7 @@ public class PostVO {
         }
 
         public PostVO build() {
-            return new PostVO(id, boardId, title, content, wittenUserId, writtenTime, updateTime, views, nonMemNick, nonMemPw);
+            return new PostVO(id, boardId, title, content, wittenUserId, writerNickname, writtenTime, updateTime, views, nonMemNick, nonMemPw);
         }
     }
 }
