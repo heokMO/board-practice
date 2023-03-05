@@ -1,9 +1,6 @@
 package com.study.boardflab.mybatis.serviceImpl;
 
-import com.study.boardflab.dto.reply.ReplyCreateDTO;
-import com.study.boardflab.dto.reply.ReplyListRequestDTO;
-import com.study.boardflab.dto.reply.ReplyUpdateDTO;
-import com.study.boardflab.dto.reply.ReplyViewDTO;
+import com.study.boardflab.dto.reply.*;
 import com.study.boardflab.mybatis.dao.ReplyDAO;
 import com.study.boardflab.mybatis.dao.UserDAO;
 import com.study.boardflab.mybatis.vo.PostVO;
@@ -73,6 +70,16 @@ public class ReplyServiceMybatis implements ReplyService {
                 .build();
         replyDAO.update(updateVO);
 
+    }
+
+    @Override
+    public void delete(Long id, ReplyDeleteDTO dto, String username) {
+        ReplyVO vo = replyDAO.find(id);
+        if(!isModifiable(vo, dto.getNonMemPw(), username)){
+            throw new AccessDeniedException("권한이 없습니다.");
+        }
+
+        replyDAO.delete(id);
     }
 
     private boolean isModifiable(ReplyVO vo, String attemptedPassword, String username){

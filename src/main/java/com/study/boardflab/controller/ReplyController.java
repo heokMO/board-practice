@@ -1,10 +1,7 @@
 package com.study.boardflab.controller;
 
 import com.study.boardflab.dto.post.PostCreateDTO;
-import com.study.boardflab.dto.reply.ReplyCreateDTO;
-import com.study.boardflab.dto.reply.ReplyListRequestDTO;
-import com.study.boardflab.dto.reply.ReplyUpdateDTO;
-import com.study.boardflab.dto.reply.ReplyViewDTO;
+import com.study.boardflab.dto.reply.*;
 import com.study.boardflab.service.PostService;
 import com.study.boardflab.service.ReplyService;
 import org.springframework.http.HttpStatus;
@@ -55,6 +52,13 @@ public class ReplyController {
                        @RequestBody ReplyUpdateDTO dto,
                        @AuthenticationPrincipal User user){
         replyService.update(id, dto, getUsername(user));
+    }
+
+    @DeleteMapping("{id}")
+    public void delete(@PathVariable Long id,
+                       @RequestBody ReplyDeleteDTO dto,
+                       @AuthenticationPrincipal User user){
+        replyService.delete(id, dto, getUsername(user));
     }
 
 

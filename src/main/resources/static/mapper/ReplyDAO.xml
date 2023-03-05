@@ -31,4 +31,9 @@
         update reply set content = #{content} where id = #{id}
     </update>
 
+    <!--    Delete    -->
+    <delete id="delete">
+        delete from post where id = #{id}
+    </delete>
+
 </mapper>

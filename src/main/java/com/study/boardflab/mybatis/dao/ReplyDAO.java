@@ -18,4 +18,6 @@ public interface ReplyDAO {
     ReplyVO find(Long id);
 
     void update(ReplyVO updateVO);
+
+    void delete(Long id);
 }
