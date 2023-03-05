@@ -8,6 +8,7 @@
     </insert>
 
 
+
     <!--    Read    -->
     <select id="getList" resultType="com.study.boardflab.mybatis.vo.ReplyVO">
         select r.id as id, r.written_user as writtenUser, u.nickname as memberNick, r.content as content, r.non_mem_nick as nonMemNick
@@ -19,5 +20,15 @@
         offset #{offset}
 
     </select>
+    <select id="find" resultType="com.study.boardflab.mybatis.vo.ReplyVO">
+        select id, post_id as postId, content, written_user as writtenUser, non_mem_nick as nonMemNick, non_mem_pw as nonMemPw
+        from reply
+        where id = #{id}
+    </select>
+
+    <!--    Update    -->
+    <update id="update">
+        update reply set content = #{content} where id = #{id}
+    </update>
 
 </mapper>

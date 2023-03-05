@@ -2,11 +2,14 @@ package com.study.boardflab.mybatis.serviceImpl;
 
 import com.study.boardflab.dto.reply.ReplyCreateDTO;
 import com.study.boardflab.dto.reply.ReplyListRequestDTO;
+import com.study.boardflab.dto.reply.ReplyUpdateDTO;
 import com.study.boardflab.dto.reply.ReplyViewDTO;
 import com.study.boardflab.mybatis.dao.ReplyDAO;
 import com.study.boardflab.mybatis.dao.UserDAO;
+import com.study.boardflab.mybatis.vo.PostVO;
 import com.study.boardflab.mybatis.vo.ReplyVO;
 import com.study.boardflab.service.ReplyService;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -56,5 +59,29 @@ public class ReplyServiceMybatis implements ReplyService {
                     .updatable(updatable)
                     .build();
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    public void update(Long id, ReplyUpdateDTO dto, String username) {
+        ReplyVO vo = replyDAO.find(id);
+        if(!isModifiable(vo, dto.getNonMemPw(), username)){
+            throw new AccessDeniedException("권한이 없습니다.");
+        }
+        ReplyVO updateVO = ReplyVO.builder()
+                .id(id)
+                .content(dto.getContent())
+                .build();
+        replyDAO.update(updateVO);
+
+    }
+
+    private boolean isModifiable(ReplyVO vo, String attemptedPassword, String username){
+        String nonMemPw = vo.getNonMemPw();
+        if(nonMemPw != null){
+            return nonMemPw.equals(attemptedPassword);
+        } else {
+            return vo.getWrittenUser().equals(userDAO.getId(username));
+        }
+
     }
 }

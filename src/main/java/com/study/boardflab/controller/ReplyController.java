@@ -3,6 +3,7 @@ package com.study.boardflab.controller;
 import com.study.boardflab.dto.post.PostCreateDTO;
 import com.study.boardflab.dto.reply.ReplyCreateDTO;
 import com.study.boardflab.dto.reply.ReplyListRequestDTO;
+import com.study.boardflab.dto.reply.ReplyUpdateDTO;
 import com.study.boardflab.dto.reply.ReplyViewDTO;
 import com.study.boardflab.service.PostService;
 import com.study.boardflab.service.ReplyService;
@@ -48,6 +49,14 @@ public class ReplyController {
 
         return replyService.getList(dto, getUsername(user));
     }
+
+    @PatchMapping("{id}")
+    public void update(@PathVariable Long id,
+                       @RequestBody ReplyUpdateDTO dto,
+                       @AuthenticationPrincipal User user){
+        replyService.update(id, dto, getUsername(user));
+    }
+
 
     private void checkWriterNull(ReplyCreateDTO dto, User user, boolean loginRequired) {
         if(!loginRequired
