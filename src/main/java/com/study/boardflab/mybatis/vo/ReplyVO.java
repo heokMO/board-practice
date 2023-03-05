@@ -8,6 +8,9 @@ public class ReplyVO {
     private Long postId;
     private String content;
     private Long writtenUser;
+
+    private String memberNick;
+
     private LocalDateTime writtenTime;
     private LocalDateTime updateTime;
     private String nonMemNick;
@@ -17,11 +20,12 @@ public class ReplyVO {
 
     }
 
-    public ReplyVO(Long id, Long postId, String content, Long writtenUser, LocalDateTime writtenTime, LocalDateTime updateTime, String nonMemNick, String nonMemPw) {
+    public ReplyVO(Long id, Long postId, String content, Long writtenUser, String memberNick, LocalDateTime writtenTime, LocalDateTime updateTime, String nonMemNick, String nonMemPw) {
         this.id = id;
         this.postId = postId;
         this.content = content;
         this.writtenUser = writtenUser;
+        this.memberNick = memberNick;
         this.writtenTime = writtenTime;
         this.updateTime = updateTime;
         this.nonMemNick = nonMemNick;
@@ -60,6 +64,10 @@ public class ReplyVO {
         return nonMemPw;
     }
 
+    public String getMemberNick() {
+        return memberNick;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -77,11 +85,13 @@ public class ReplyVO {
         return new ReplyVOBuilder();
     }
 
+
     public static final class ReplyVOBuilder {
         private Long id;
         private Long postId;
         private String content;
         private Long writtenUser;
+        private String memberNick;
         private LocalDateTime writtenTime;
         private LocalDateTime updateTime;
         private String nonMemNick;
@@ -114,6 +124,11 @@ public class ReplyVO {
             return this;
         }
 
+        public ReplyVOBuilder memberNick(String memberNick) {
+            this.memberNick = memberNick;
+            return this;
+        }
+
         public ReplyVOBuilder writtenTime(LocalDateTime writtenTime) {
             this.writtenTime = writtenTime;
             return this;
@@ -135,7 +150,7 @@ public class ReplyVO {
         }
 
         public ReplyVO build() {
-            return new ReplyVO(id, postId, content, writtenUser, writtenTime, updateTime, nonMemNick, nonMemPw);
+            return new ReplyVO(id, postId, content, writtenUser, memberNick, writtenTime, updateTime, nonMemNick, nonMemPw);
         }
     }
 }

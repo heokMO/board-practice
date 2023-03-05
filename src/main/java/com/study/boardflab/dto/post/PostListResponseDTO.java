@@ -8,6 +8,8 @@ public class PostListResponseDTO implements Serializable {
     private Integer id;
     private String title;
     private String writer;
+
+    private String nonMemNick;
     private LocalDateTime writtenTime;
     private Integer views;
     private Integer replys;
@@ -16,10 +18,11 @@ public class PostListResponseDTO implements Serializable {
 
     }
 
-    public PostListResponseDTO(Integer id, String title, String writer, LocalDateTime writtenTime, Integer views, Integer replys) {
+    public PostListResponseDTO(Integer id, String title, String writer, String nonMemNick, LocalDateTime writtenTime, Integer views, Integer replys) {
         this.id = id;
         this.title = title;
         this.writer = writer;
+        this.nonMemNick = nonMemNick;
         this.writtenTime = writtenTime;
         this.views = views;
         this.replys = replys;
@@ -49,14 +52,20 @@ public class PostListResponseDTO implements Serializable {
         return replys;
     }
 
+    public String getNonMemNick() {
+        return nonMemNick;
+    }
+
     public static PostListResponseDTOBuilder builder(){
         return new PostListResponseDTOBuilder();
     }
+
 
     public static final class PostListResponseDTOBuilder {
         private Integer id;
         private String title;
         private String writer;
+        private String nonMemNick;
         private LocalDateTime writtenTime;
         private Integer views;
         private Integer replys;
@@ -83,6 +92,11 @@ public class PostListResponseDTO implements Serializable {
             return this;
         }
 
+        public PostListResponseDTOBuilder nonMemNick(String nonMemNick) {
+            this.nonMemNick = nonMemNick;
+            return this;
+        }
+
         public PostListResponseDTOBuilder writtenTime(LocalDateTime writtenTime) {
             this.writtenTime = writtenTime;
             return this;
@@ -99,7 +113,7 @@ public class PostListResponseDTO implements Serializable {
         }
 
         public PostListResponseDTO build() {
-            return new PostListResponseDTO(id, title, writer, writtenTime, views, replys);
+            return new PostListResponseDTO(id, title, writer, nonMemNick, writtenTime, views, replys);
         }
     }
 }

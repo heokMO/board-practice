@@ -13,7 +13,7 @@
 
     <!--    Read    -->
     <select id="getList" resultType="com.study.boardflab.dto.post.PostListResponseDTO">
-        SELECT p.id, p.title, u.nickname AS writer, p.written_time AS writtenTime, p.views, COUNT(r.id) AS replys
+        SELECT p.id, p.title, u.nickname AS writer, p.written_time AS writtenTime, p.views, COUNT(r.id) AS replys, p.non_mem_nick as nonMemNick
         FROM post p
                  JOIN user u ON p.written_user_id = u.id
                  LEFT JOIN reply r ON p.id = r.post_id

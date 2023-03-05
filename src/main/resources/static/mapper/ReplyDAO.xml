@@ -6,4 +6,18 @@
         insert into reply (post_id, content, written_user, non_mem_nick, non_mem_pw)
         values (#{postId}, #{content}, #{writtenUser}, #{nonMemNick}, #{nonMemPw})
     </insert>
+
+
+    <!--    Read    -->
+    <select id="getList" resultType="com.study.boardflab.mybatis.vo.ReplyVO">
+        select r.id as id, r.written_user as writtenUser, u.nickname as memberNick, r.content as content, r.non_mem_nick as nonMemNick
+        from reply r
+            join user u on r.written_user = u.account_id
+        where post_id = #{postId}
+        order by r.written_time desc
+        limit #{limit}
+        offset #{offset}
+
+    </select>
+
 </mapper>

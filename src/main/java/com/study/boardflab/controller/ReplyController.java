@@ -2,18 +2,18 @@ package com.study.boardflab.controller;
 
 import com.study.boardflab.dto.post.PostCreateDTO;
 import com.study.boardflab.dto.reply.ReplyCreateDTO;
+import com.study.boardflab.dto.reply.ReplyListRequestDTO;
+import com.study.boardflab.dto.reply.ReplyViewDTO;
 import com.study.boardflab.service.PostService;
 import com.study.boardflab.service.ReplyService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.util.List;
 import java.util.Objects;
 
 @RestController
@@ -38,6 +38,15 @@ public class ReplyController {
         checkLoginRequired(user, loginRequired);
 
         replyService.create(dto, getUsername(user));
+    }
+
+    @GetMapping
+    public List<ReplyViewDTO> getList(@RequestBody ReplyListRequestDTO dto,
+                                      @AuthenticationPrincipal User user){
+
+        checkLoginRequired(user, isLoginRequired(dto.getPostId()));
+
+        return replyService.getList(dto, getUsername(user));
     }
 
     private void checkWriterNull(ReplyCreateDTO dto, User user, boolean loginRequired) {
