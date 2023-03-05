@@ -1,6 +1,7 @@
 package com.study.boardflab.service;
 
 import com.study.boardflab.dto.post.*;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -16,4 +17,6 @@ public interface PostService {
     PostReadDTO getPost(Long postId, String username);
 
     void updatePost(Long postId, PostUpdateDTO dto, String username);
+
+    void deletePost(Long postId, PostDeleteDTO dto, String username);
 }

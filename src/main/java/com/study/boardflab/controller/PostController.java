@@ -62,6 +62,13 @@ public class PostController {
         postService.updatePost(postId, dto, getUsername(user));
     }
 
+    @DeleteMapping("/{postId}")
+    public void deletePost(@PathVariable Long postId,
+                           @RequestBody PostDeleteDTO dto,
+                           @AuthenticationPrincipal User user){
+        postService.deletePost(postId, dto, getUsername(user));
+    }
+
     private static String getUsername(User user) {
         String username = null;
         if(user != null){

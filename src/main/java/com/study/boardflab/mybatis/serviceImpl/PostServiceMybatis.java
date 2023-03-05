@@ -39,7 +39,7 @@ public class PostServiceMybatis implements PostService {
                 .wittenUserId(userDAO.getId(username))
                 .build();
 
-        postDAO.createPost(vo);
+        postDAO.create(vo);
         return vo.getId();
     }
 
@@ -52,7 +52,7 @@ public class PostServiceMybatis implements PostService {
     @Override
     public PostReadDTO getPost(Long postId, String username) {
 
-        PostVO vo = postDAO.getPost(postId);
+        PostVO vo = postDAO.find(postId);
 
 
         if(boardDAO.isLoginRequired(vo.getBoardId()) && username == null){
@@ -80,7 +80,7 @@ public class PostServiceMybatis implements PostService {
 
     @Override
     public void updatePost(Long postId, PostUpdateDTO dto, String username) {
-        PostVO vo = postDAO.getPost(postId);
+        PostVO vo = postDAO.find(postId);
 
         if(!isModifiable(vo, dto.getNonMemPw(), username)){
             throw new AccessDeniedException("권한이 없습니다.");
@@ -91,7 +91,18 @@ public class PostServiceMybatis implements PostService {
                 .content(dto.getContents())
                 .build();
 
-        postDAO.updatePost(updateVO);
+        postDAO.update(updateVO);
+    }
+
+    @Override
+    public void deletePost(Long postId, PostDeleteDTO dto, String username) {
+        PostVO vo = postDAO.find(postId);
+
+        if(!isModifiable(vo, dto.getNonMemPw(), username)){
+            throw new AccessDeniedException("권한이 없습니다.");
+        }
+
+        postDAO.delete(vo);
     }
 
     private boolean isModifiable(PostVO vo, String attemptedPassword, String username){

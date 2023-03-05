@@ -9,7 +9,7 @@ import java.util.List;
 
 @Mapper
 public interface PostDAO {
-    void createPost(PostVO vo);
+    void create(PostVO vo);
 
     void deleteAll();
 
@@ -17,9 +17,11 @@ public interface PostDAO {
                                       @Param("limit") Integer limit,
                                       @Param("offset")Integer offset);
 
-    PostVO getPost(Long postId);
+    PostVO find(Long postId);
 
     void increaseViews(Long postId);
 
-    void updatePost(PostVO updateVO);
+    void update(PostVO updateVO);
+
+    void delete(PostVO vo);
 }

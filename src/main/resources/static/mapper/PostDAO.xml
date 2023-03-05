@@ -4,7 +4,7 @@
 
 
     <!--    Create    -->
-    <insert id="createPost" useGeneratedKeys="true" keyProperty="id">
+    <insert id="create" useGeneratedKeys="true" keyProperty="id">
         insert into post
             (board_id, title, content, written_user_id, non_mem_nick, non_mem_pw)
         values (#{boardId}, #{title}, #{content}, #{wittenUserId}, #{nonMemNick}, #{nonMemPw})
@@ -24,7 +24,7 @@
             OFFSET #{offset}
     </select>
 
-    <select id="getPost" resultType="com.study.boardflab.mybatis.vo.PostVO">
+    <select id="find" resultType="com.study.boardflab.mybatis.vo.PostVO">
         select p.id, p.board_id as boardId, p.title, p.content, p.written_user_id as wittenUserId, p.non_mem_nick as nonMemNick, p.update_time as updateTime, p.views, u.nickname as writerNickname
         from post p
         JOIN USER u on p.written_user_id = u.id
@@ -38,13 +38,16 @@
         SET views = views + 1
         WHERE id = #{postId};
     </update>
-    <update id="updatePost">
+    <update id="update">
         update post set content = #{content} where id = #{id}
     </update>
 
     <!--    Delete    -->
     <delete id="deleteAll">
         delete from post
+    </delete>
+    <delete id="delete">
+        delete from post where id = #{id}
     </delete>
 
 
