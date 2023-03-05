@@ -38,6 +38,9 @@
         SET views = views + 1
         WHERE id = #{postId};
     </update>
+    <update id="updatePost">
+        update post set content = #{content} where id = #{id}
+    </update>
 
     <!--    Delete    -->
     <delete id="deleteAll">

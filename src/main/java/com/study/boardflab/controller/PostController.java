@@ -1,9 +1,6 @@
 package com.study.boardflab.controller;
 
-import com.study.boardflab.dto.post.PostCreateDTO;
-import com.study.boardflab.dto.post.PostListRequestDTO;
-import com.study.boardflab.dto.post.PostListResponseDTO;
-import com.study.boardflab.dto.post.PostReadDTO;
+import com.study.boardflab.dto.post.*;
 import com.study.boardflab.service.BoardService;
 import com.study.boardflab.service.PostService;
 import org.springframework.http.HttpStatus;
@@ -36,12 +33,7 @@ public class PostController {
 
         checkLoginRequired(user, loginRequired);
 
-        String username = null;
-        if(user != null){
-            username = user.getUsername();
-        }
-
-        return postService.createPost(dto, username);
+        return postService.createPost(dto, getUsername(user));
     }
 
     @GetMapping("/list")
@@ -57,18 +49,27 @@ public class PostController {
     public PostReadDTO getPost(@PathVariable Long postId,
                                @AuthenticationPrincipal User user){
 
+        return postService.getPost(postId, getUsername(user));
+    }
+
+
+
+    @PatchMapping("/{postId}")
+    public void updatePost(@PathVariable Long postId,
+                           @RequestBody PostUpdateDTO dto,
+                           @AuthenticationPrincipal User user){
+
+        postService.updatePost(postId, dto, getUsername(user));
+    }
+
+    private static String getUsername(User user) {
         String username = null;
         if(user != null){
             username = user.getUsername();
         }
-
-        return postService.getPost(postId, username);
+        return username;
     }
 
-//    @PatchMapping("/post/{postId}")
-//    public void updatePost(@PathVariable Long postId)
-//
-//
 
 
     private boolean isLoginRequired(int boardNum) {

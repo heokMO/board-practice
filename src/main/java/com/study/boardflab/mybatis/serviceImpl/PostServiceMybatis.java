@@ -1,15 +1,13 @@
 package com.study.boardflab.mybatis.serviceImpl;
 
-import com.study.boardflab.dto.post.PostCreateDTO;
-import com.study.boardflab.dto.post.PostListRequestDTO;
-import com.study.boardflab.dto.post.PostListResponseDTO;
-import com.study.boardflab.dto.post.PostReadDTO;
+import com.study.boardflab.dto.post.*;
 import com.study.boardflab.mybatis.dao.BoardDAO;
 import com.study.boardflab.mybatis.dao.ImageDAO;
 import com.study.boardflab.mybatis.dao.PostDAO;
 import com.study.boardflab.mybatis.dao.UserDAO;
 import com.study.boardflab.mybatis.vo.PostVO;
 import com.study.boardflab.service.PostService;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -78,6 +76,32 @@ public class PostServiceMybatis implements PostService {
 
         increaseViews(vo);
         return dto;
+    }
+
+    @Override
+    public void updatePost(Long postId, PostUpdateDTO dto, String username) {
+        PostVO vo = postDAO.getPost(postId);
+
+        if(!isModifiable(vo, dto.getNonMemPw(), username)){
+            throw new AccessDeniedException("권한이 없습니다.");
+        }
+
+        PostVO updateVO = PostVO.builder()
+                .id(vo.getId())
+                .content(dto.getContents())
+                .build();
+
+        postDAO.updatePost(updateVO);
+    }
+
+    private boolean isModifiable(PostVO vo, String attemptedPassword, String username){
+        String nonMemPw = vo.getNonMemPw();
+        if(nonMemPw != null){
+            return nonMemPw.equals(attemptedPassword);
+        } else {
+            return vo.getWittenUserId().equals(userDAO.getId(username));
+        }
+
     }
 
     private void increaseViews(PostVO vo) {

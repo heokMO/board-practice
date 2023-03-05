@@ -20,4 +20,6 @@ public interface PostDAO {
     PostVO getPost(Long postId);
 
     void increaseViews(Long postId);
+
+    void updatePost(PostVO updateVO);
 }

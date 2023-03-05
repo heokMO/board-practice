@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.nio.file.AccessDeniedException;
 import java.sql.SQLException;
 
 @RestControllerAdvice
@@ -33,5 +34,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleHttpClientErrorException(HttpClientErrorException exception){
 
         return ResponseEntity.status(exception.getStatusCode()).body(exception.getStatusText());
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<String> handleAccessDeniedException(AccessDeniedException exception){
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(exception.getMessage());
     }
 }
