@@ -30,6 +30,9 @@
         JOIN USER u on p.written_user_id = u.id
         where p.id = #{postId}
     </select>
+    <select id="isLoginRequired" resultType="java.lang.Boolean">
+        select b.login_req from post p JOIN board b on p.board_id = b.id where p.id = #{postId}
+    </select>
 
 
     <!--    Update    -->

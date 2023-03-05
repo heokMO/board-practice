@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.study.boardflab.mybatis.dao.ReplyDAO">
+    <!--    Create    -->
+    <insert id="create">
+        insert into reply (post_id, content, written_user, non_mem_nick, non_mem_pw)
+        values (#{postId}, #{content}, #{writtenUser}, #{nonMemNick}, #{nonMemPw})
+    </insert>
+</mapper>

@@ -7,9 +7,11 @@ import com.study.boardflab.mybatis.dao.PostDAO;
 import com.study.boardflab.mybatis.dao.UserDAO;
 import com.study.boardflab.mybatis.vo.PostVO;
 import com.study.boardflab.service.PostService;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
 import java.util.Objects;
@@ -103,6 +105,15 @@ public class PostServiceMybatis implements PostService {
         }
 
         postDAO.delete(vo);
+    }
+
+    @Override
+    public boolean isLoginRequired(Long postId) {
+        try{
+            return postDAO.isLoginRequired(postId);
+        } catch (NullPointerException exception){
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "존재하지 않는 게시판입니다.");
+        }
     }
 
     private boolean isModifiable(PostVO vo, String attemptedPassword, String username){

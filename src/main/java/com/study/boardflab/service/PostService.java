@@ -19,4 +19,6 @@ public interface PostService {
     void updatePost(Long postId, PostUpdateDTO dto, String username);
 
     void deletePost(Long postId, PostDeleteDTO dto, String username);
+
+    boolean isLoginRequired(Long postId);
 }

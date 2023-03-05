@@ -24,4 +24,6 @@ public interface PostDAO {
     void update(PostVO updateVO);
 
     void delete(PostVO vo);
+
+    Boolean isLoginRequired(Long postId);
 }
