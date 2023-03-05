@@ -56,4 +56,12 @@ public class ImageServiceMybatis implements ImageService {
 
         return imageUtil.get(vo.getPath());
     }
+
+    @Override
+    public void delete(Long id) throws IOException {
+        ImageVO vo = imageDAO.find(id);
+        imageUtil.delete(vo.getPath());
+
+        imageDAO.delete(id);
+    }
 }

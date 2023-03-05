@@ -33,4 +33,9 @@ public class ImageController {
 
         return imageService.getFile(id);
     }
+
+    @DeleteMapping(value = "/{id}")
+    public void delete(@PathVariable Long id) throws IOException {
+        imageService.delete(id);
+    }
 }

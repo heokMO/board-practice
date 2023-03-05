@@ -15,4 +15,6 @@ public interface ImageDAO {
     void setPost(@Param("infos") List<ImageVO> infos);
 
     ImageVO find(Long id);
+
+    void delete(Long id);
 }

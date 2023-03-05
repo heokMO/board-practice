@@ -12,12 +12,19 @@ public class ImageUtilsImpl implements ImageUtils {
 
     @Override
     public String save(MultipartFile image) throws IOException{
+        //TODO: Image Save 구현
 
         return UUID.randomUUID().toString() + ".jpeg";
     }
 
     @Override
     public byte[] get(String path) throws IOException {
+        //TODO: Image Read 구현
         return new byte[0];
+    }
+
+    @Override
+    public void delete(String path) throws IOException {
+        //TODO: Image Delete 구현
     }
 }

@@ -12,4 +12,6 @@ public interface ImageUtils {
     String save(MultipartFile image) throws IOException;
 
     byte[] get(String path) throws IOException;
+
+    void delete(String path) throws IOException;
 }

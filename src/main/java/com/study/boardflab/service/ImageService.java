@@ -12,4 +12,6 @@ public interface ImageService {
     void setPost(List<ImagePostSetDTO> settingInfos);
 
     byte[] getFile(Long id) throws IOException;
+
+    void delete(Long id) throws IOException;
 }

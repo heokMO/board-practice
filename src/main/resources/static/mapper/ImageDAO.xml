@@ -13,11 +13,16 @@
     <select id="find" resultType="com.study.boardflab.mybatis.vo.ImageVO">
         select id, post_id, origin_name, path from image where id = #{id}
     </select>
+
     <!--    Update    -->
     <update id="setPost">
         <foreach collection="infos" item="vo" separator=";">
             update image set post_id = #{vo.postId} where id = #{vo.id}
         </foreach>
     </update>
+
     <!--    Delete    -->
+    <delete id="delete">
+        delete from image where id = #{id}
+    </delete>
 </mapper>
