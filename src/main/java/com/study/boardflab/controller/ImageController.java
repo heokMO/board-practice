@@ -1,16 +1,20 @@
 package com.study.boardflab.controller;
 
+import com.study.boardflab.dto.image.ImageDeleteResponseDTO;
 import com.study.boardflab.dto.image.ImagePostSetDTO;
+import com.study.boardflab.dto.image.SaveImageResponseDTO;
+import com.study.boardflab.dto.messageWrap.SuccessMessageDTO;
 import com.study.boardflab.service.ImageService;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("image")
+@RequestMapping("/image")
 public class ImageController {
     private final ImageService imageService;
 
@@ -19,23 +23,36 @@ public class ImageController {
     }
 
     @PostMapping
-    public Long uploadImage(@RequestParam("image") MultipartFile image) throws IOException {
-        return imageService.saveImage(image);
+    public SuccessMessageDTO uploadImage(@RequestParam("image") MultipartFile image) throws IOException {
+        if(image == null){
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Image file이 비어있습니다.");
+        }
+
+        Long saveImageId = imageService.saveImage(image);
+        SaveImageResponseDTO dto = new SaveImageResponseDTO(saveImageId);
+
+        return new SuccessMessageDTO(dto);
     }
 
     @PatchMapping
-    public void setPost(@RequestBody List<ImagePostSetDTO> settingInfos){
+    public SuccessMessageDTO setPost(@RequestBody List<ImagePostSetDTO> settingInfos){
         imageService.setPost(settingInfos);
+
+        return SuccessMessageDTO.builder()
+                .message("All contents changed")
+                .build();
     }
 
-    @GetMapping(value = "/{id}", produces = MediaType.IMAGE_JPEG_VALUE)
-    public byte[] get(@PathVariable Long id) throws IOException {
+    @GetMapping(value = "/{id}")
+    public SuccessMessageDTO get(@PathVariable Long id) throws IOException {
 
-        return imageService.getFile(id);
+        return new SuccessMessageDTO(imageService.getFile(id));
     }
 
     @DeleteMapping(value = "/{id}")
-    public void delete(@PathVariable Long id) throws IOException {
+    public SuccessMessageDTO delete(@PathVariable Long id) throws IOException {
         imageService.delete(id);
+
+        return new SuccessMessageDTO(new ImageDeleteResponseDTO(id));
     }
 }

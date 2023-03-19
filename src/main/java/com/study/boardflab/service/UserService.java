@@ -8,14 +8,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 public interface UserService extends UserDetailsService {
 
-    @Transactional
+
     void create(UserCreateDTO userCreateDTO);
 
     boolean checkGenerateAccountId(String id);
 
     boolean checkGenerateNickname(String nickname);
 
-    @Transactional
     void updateUser(String username, UserUpdateDTO userUpdateDTO);
 
     void deleteUser(String username);

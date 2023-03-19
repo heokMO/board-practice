@@ -3,7 +3,7 @@
 <mapper namespace="com.study.boardflab.mybatis.dao.ImageDAO">
     <!--    Create    -->
     <insert id="save" useGeneratedKeys="true" keyProperty="id">
-        insert into image (origin_name, image.path) values (#{originName}, #{path})
+        insert into image (origin_name, path) values (#{originName}, #{path})
     </insert>
 
     <!--    Read    -->
@@ -17,7 +17,7 @@
     <!--    Update    -->
     <update id="setPost">
         <foreach collection="infos" item="vo" separator=";">
-            update image set post_id = #{vo.postId} where id = #{vo.id}
+            update image set post_id = #{vo.postId} where id = #{vo.id} and post_id is null
         </foreach>
     </update>
 

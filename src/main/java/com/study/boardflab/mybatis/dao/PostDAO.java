@@ -21,7 +21,7 @@ public interface PostDAO {
 
     void increaseViews(Long postId);
 
-    void update(PostVO updateVO);
+    Integer update(PostVO updateVO);
 
     void delete(PostVO vo);
 

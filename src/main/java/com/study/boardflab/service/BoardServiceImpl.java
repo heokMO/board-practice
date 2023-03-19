@@ -1,14 +1,13 @@
-package com.study.boardflab.mybatis.serviceImpl;
+package com.study.boardflab.service;
 
 import com.study.boardflab.mybatis.dao.BoardDAO;
-import com.study.boardflab.service.BoardService;
 import org.springframework.stereotype.Service;
 
 @Service
-public class BoardServiceMybatis implements BoardService {
+public class BoardServiceImpl implements BoardService {
     private final BoardDAO boardDAO;
 
-    public BoardServiceMybatis(BoardDAO boardDAO) {
+    public BoardServiceImpl(BoardDAO boardDAO) {
         this.boardDAO = boardDAO;
     }
 

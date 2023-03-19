@@ -1,5 +1,6 @@
 package com.study.boardflab.service;
 
+import com.study.boardflab.dto.image.ImageGetDTO;
 import com.study.boardflab.dto.image.ImagePostSetDTO;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -11,7 +12,7 @@ public interface ImageService {
 
     void setPost(List<ImagePostSetDTO> settingInfos);
 
-    byte[] getFile(Long id) throws IOException;
+    ImageGetDTO getFile(Long id) throws IOException;
 
     void delete(Long id) throws IOException;
 }

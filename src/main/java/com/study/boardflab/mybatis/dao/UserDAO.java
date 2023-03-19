@@ -15,9 +15,9 @@ public interface UserDAO {
 
     UserVO findByAccountId(String username);
 
-    void updateUser(UserVO vo);
+    Integer updateUser(UserVO vo);
 
-    void deleteUser(String username);
+    Integer deleteUser(String username);
 
     Long getId(String username);
 

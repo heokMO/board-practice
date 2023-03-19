@@ -1,6 +1,6 @@
 package com.study.boardflab.controller;
 
-import com.study.boardflab.dto.post.PostCreateDTO;
+import com.study.boardflab.dto.messageWrap.SuccessMessageDTO;
 import com.study.boardflab.dto.reply.*;
 import com.study.boardflab.service.PostService;
 import com.study.boardflab.service.ReplyService;
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Objects;
 
 @RestController
-@RequestMapping("reply")
+@RequestMapping("/reply")
 public class ReplyController {
     private final PostService postService;
     private final ReplyService replyService;
@@ -26,8 +26,8 @@ public class ReplyController {
     }
 
     @PostMapping
-    public void create(@RequestBody ReplyCreateDTO dto,
-                       @AuthenticationPrincipal User user){
+    public SuccessMessageDTO create(@RequestBody ReplyCreateDTO dto,
+                                    @AuthenticationPrincipal User user){
 
         boolean loginRequired = isLoginRequired(dto.getPostId());
 
@@ -36,29 +36,41 @@ public class ReplyController {
         checkLoginRequired(user, loginRequired);
 
         replyService.create(dto, getUsername(user));
+
+        return SuccessMessageDTO.builder().build();
     }
 
     @GetMapping
-    public List<ReplyViewDTO> getList(@RequestBody ReplyListRequestDTO dto,
+    public SuccessMessageDTO getList(@RequestBody ReplyListRequestDTO dto,
                                       @AuthenticationPrincipal User user){
 
         checkLoginRequired(user, isLoginRequired(dto.getPostId()));
 
-        return replyService.getList(dto, getUsername(user));
+        return SuccessMessageDTO.builder()
+                .data("list", replyService.getList(dto, getUsername(user)))
+                .build();
     }
 
     @PatchMapping("{id}")
-    public void update(@PathVariable Long id,
+    public SuccessMessageDTO update(@PathVariable Long id,
                        @RequestBody ReplyUpdateDTO dto,
                        @AuthenticationPrincipal User user){
         replyService.update(id, dto, getUsername(user));
+
+        return SuccessMessageDTO.builder()
+                .data("updatedReplyId", id)
+                .build();
     }
 
     @DeleteMapping("{id}")
-    public void delete(@PathVariable Long id,
+    public SuccessMessageDTO delete(@PathVariable Long id,
                        @RequestBody ReplyDeleteDTO dto,
                        @AuthenticationPrincipal User user){
         replyService.delete(id, dto, getUsername(user));
+
+        return SuccessMessageDTO.builder()
+                .data("deletedReplyId", id)
+                .build();
     }
 
 
@@ -82,7 +94,7 @@ public class ReplyController {
             throw new AuthenticationCredentialsNotFoundException("로그인이 필요합니다");
         }
     }
-    private static String getUsername(User user) {
+    private String getUsername(User user) {
         String username = null;
         if(user != null){
             username = user.getUsername();

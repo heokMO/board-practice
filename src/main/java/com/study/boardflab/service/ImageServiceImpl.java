@@ -1,12 +1,14 @@
-package com.study.boardflab.mybatis.serviceImpl;
+package com.study.boardflab.service;
 
+import com.study.boardflab.dto.image.ImageGetDTO;
 import com.study.boardflab.dto.image.ImagePostSetDTO;
 import com.study.boardflab.mybatis.dao.ImageDAO;
 import com.study.boardflab.mybatis.vo.ImageVO;
-import com.study.boardflab.service.ImageService;
 import com.study.boardflab.util.ImageUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -14,12 +16,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class ImageServiceMybatis implements ImageService {
+public class ImageServiceImpl implements ImageService {
     private final ImageUtils imageUtil;
 
     private final ImageDAO imageDAO;
 
-    public ImageServiceMybatis(ImageUtils imageUtil, ImageDAO imageDAO) {
+
+
+    public ImageServiceImpl(ImageUtils imageUtil, ImageDAO imageDAO) {
         this.imageUtil = imageUtil;
         this.imageDAO = imageDAO;
     }
@@ -27,11 +31,13 @@ public class ImageServiceMybatis implements ImageService {
     @Override
     public Long saveImage(MultipartFile image) throws IOException {
         String path =  imageUtil.save(image);
+
         ImageVO vo = ImageVO.builder()
                 .path(path)
-                .originName(image.getOriginalFilename())
+                .originName(image.getName())
                 .build();
-        return imageDAO.save(vo);
+        imageDAO.save(vo);
+        return vo.getId();
     }
 
     @Override
@@ -47,14 +53,23 @@ public class ImageServiceMybatis implements ImageService {
                         .postId(dto.getPostId())
                         .build())
                 .collect(Collectors.toList());
-        imageDAO.setPost(infos);
+
+        if(imageDAO.setPost(infos) != 1){
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "변경되지 않은 Image가 있습니다.");
+        }
     }
 
     @Override
-    public byte[] getFile(Long id) throws IOException {
+    public ImageGetDTO getFile(Long id) throws IOException {
         ImageVO vo = imageDAO.find(id);
 
-        return imageUtil.get(vo.getPath());
+        byte[] imageData = imageUtil.get(vo.getPath());
+
+        return ImageGetDTO.builder()
+                .id(vo.getId())
+                .imageName(vo.getOriginName())
+                .image(imageData)
+                .build();
     }
 
     @Override
@@ -62,6 +77,8 @@ public class ImageServiceMybatis implements ImageService {
         ImageVO vo = imageDAO.find(id);
         imageUtil.delete(vo.getPath());
 
-        imageDAO.delete(id);
+        if(imageDAO.delete(id) != 1){
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "해당 Image가 존재하지 않습니다.");
+        }
     }
 }

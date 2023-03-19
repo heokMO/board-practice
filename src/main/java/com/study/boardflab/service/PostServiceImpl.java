@@ -1,4 +1,4 @@
-package com.study.boardflab.mybatis.serviceImpl;
+package com.study.boardflab.service;
 
 import com.study.boardflab.dto.post.*;
 import com.study.boardflab.mybatis.dao.BoardDAO;
@@ -6,7 +6,6 @@ import com.study.boardflab.mybatis.dao.ImageDAO;
 import com.study.boardflab.mybatis.dao.PostDAO;
 import com.study.boardflab.mybatis.dao.UserDAO;
 import com.study.boardflab.mybatis.vo.PostVO;
-import com.study.boardflab.service.PostService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
@@ -17,13 +16,13 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-public class PostServiceMybatis implements PostService {
+public class PostServiceImpl implements PostService {
     private final PostDAO postDAO;
     private final UserDAO userDAO;
     private final BoardDAO boardDAO;
     private final ImageDAO imageDAO;
 
-    public PostServiceMybatis(PostDAO postDAO, UserDAO userDAO, BoardDAO boardDAO, ImageDAO imageDAO) {
+    public PostServiceImpl(PostDAO postDAO, UserDAO userDAO, BoardDAO boardDAO, ImageDAO imageDAO) {
         this.postDAO = postDAO;
         this.userDAO = userDAO;
         this.boardDAO = boardDAO;
@@ -32,6 +31,7 @@ public class PostServiceMybatis implements PostService {
 
     @Override
     public Long createPost(PostCreateDTO dto, String username) {
+
         PostVO vo = PostVO.builder()
                 .boardId(dto.getBoardId())
                 .title(dto.getTitle())
@@ -47,7 +47,6 @@ public class PostServiceMybatis implements PostService {
 
     @Override
     public List<PostListResponseDTO> getList(PostListRequestDTO dto) {
-
         return postDAO.getList(dto.getBoardId(), dto.getLimit(), dto.getOffset());
     }
 
@@ -93,7 +92,9 @@ public class PostServiceMybatis implements PostService {
                 .content(dto.getContents())
                 .build();
 
-        postDAO.update(updateVO);
+        if(postDAO.update(updateVO) != 1){
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "없는 게시물 입니다.");
+        }
     }
 
     @Override

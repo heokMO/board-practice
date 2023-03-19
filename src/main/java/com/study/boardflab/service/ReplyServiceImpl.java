@@ -1,25 +1,24 @@
-package com.study.boardflab.mybatis.serviceImpl;
+package com.study.boardflab.service;
 
 import com.study.boardflab.dto.reply.*;
 import com.study.boardflab.mybatis.dao.ReplyDAO;
 import com.study.boardflab.mybatis.dao.UserDAO;
-import com.study.boardflab.mybatis.vo.PostVO;
 import com.study.boardflab.mybatis.vo.ReplyVO;
-import com.study.boardflab.service.ReplyService;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
-public class ReplyServiceMybatis implements ReplyService {
+public class ReplyServiceImpl implements ReplyService {
     private final ReplyDAO replyDAO;
     private final UserDAO userDAO;
 
-    public ReplyServiceMybatis(ReplyDAO replyDAO, UserDAO userDAO) {
+    public ReplyServiceImpl(ReplyDAO replyDAO, UserDAO userDAO) {
         this.replyDAO = replyDAO;
         this.userDAO = userDAO;
     }
@@ -68,7 +67,10 @@ public class ReplyServiceMybatis implements ReplyService {
                 .id(id)
                 .content(dto.getContent())
                 .build();
-        replyDAO.update(updateVO);
+
+        if(replyDAO.update(updateVO) != 1){
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "해당 ID에 해당하는 댓글이 없습니다.");
+        }
 
     }
 
@@ -79,7 +81,9 @@ public class ReplyServiceMybatis implements ReplyService {
             throw new AccessDeniedException("권한이 없습니다.");
         }
 
-        replyDAO.delete(id);
+        if(replyDAO.delete(id) != 1){
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "해당 ID에 해당하는 댓글이 없습니다.");
+        }
     }
 
     private boolean isModifiable(ReplyVO vo, String attemptedPassword, String username){

@@ -10,11 +10,11 @@ import java.util.List;
 public interface ImageDAO {
     List<Integer> getIds(Long postId);
 
-    Long save(ImageVO vo);
+    void save(ImageVO vo);
 
-    void setPost(@Param("infos") List<ImageVO> infos);
+    Integer setPost(@Param("infos") List<ImageVO> infos);
 
     ImageVO find(Long id);
 
-    void delete(Long id);
+    Integer delete(Long id);
 }

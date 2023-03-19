@@ -9,7 +9,6 @@ import java.util.List;
 public interface PostService {
 
 
-    @Transactional
     Long createPost(PostCreateDTO dto, String username);
 
     List<PostListResponseDTO> getList(PostListRequestDTO dto);

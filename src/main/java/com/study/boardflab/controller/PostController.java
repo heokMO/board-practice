@@ -1,5 +1,6 @@
 package com.study.boardflab.controller;
 
+import com.study.boardflab.dto.messageWrap.SuccessMessageDTO;
 import com.study.boardflab.dto.post.*;
 import com.study.boardflab.service.BoardService;
 import com.study.boardflab.service.PostService;
@@ -10,8 +11,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 
-import java.util.List;
-import java.util.Objects;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/post")
@@ -25,51 +25,67 @@ public class PostController {
     }
 
     @PostMapping
-    public Long writePost(@RequestBody PostCreateDTO dto,
-                           @AuthenticationPrincipal User user){
+    public SuccessMessageDTO writePost(@RequestBody PostCreateDTO dto,
+                           @AuthenticationPrincipal User user) throws IOException {
         boolean loginRequired = isLoginRequired(dto.getBoardId());
 
         checkWriterNull(dto, user, loginRequired);
 
         checkLoginRequired(user, loginRequired);
 
-        return postService.createPost(dto, getUsername(user));
+        Long createdPostId = postService.createPost(dto, getUsername(user));
+
+        return SuccessMessageDTO.builder()
+                .data(new PostCreateResponseDTO(createdPostId))
+                .build();
     }
 
     @GetMapping("/list")
-    public List<PostListResponseDTO> getList(@ModelAttribute PostListRequestDTO dto,
+    public SuccessMessageDTO getList(@ModelAttribute PostListRequestDTO dto,
                                              @AuthenticationPrincipal User user){
 
         checkLoginRequired(user, isLoginRequired(dto.getBoardId()));
 
-        return postService.getList(dto);
+        return SuccessMessageDTO.builder()
+                .data("list", postService.getList(dto))
+                .build();
     }
 
     @GetMapping("/{postId}")
-    public PostReadDTO getPost(@PathVariable Long postId,
+    public SuccessMessageDTO getPost(@PathVariable Long postId,
                                @AuthenticationPrincipal User user){
 
-        return postService.getPost(postId, getUsername(user));
+        return SuccessMessageDTO.builder()
+                .data("post", postService.getPost(postId, getUsername(user)))
+                .build();
     }
 
 
 
     @PatchMapping("/{postId}")
-    public void updatePost(@PathVariable Long postId,
+    public SuccessMessageDTO updatePost(@PathVariable Long postId,
                            @RequestBody PostUpdateDTO dto,
                            @AuthenticationPrincipal User user){
 
         postService.updatePost(postId, dto, getUsername(user));
+
+        return SuccessMessageDTO.builder()
+                .data("updatedPostId", postId)
+                .build();
     }
 
     @DeleteMapping("/{postId}")
-    public void deletePost(@PathVariable Long postId,
+    public SuccessMessageDTO deletePost(@PathVariable Long postId,
                            @RequestBody PostDeleteDTO dto,
                            @AuthenticationPrincipal User user){
         postService.deletePost(postId, dto, getUsername(user));
+
+        return SuccessMessageDTO.builder()
+                .data("deletedPostId", postId)
+                .build();
     }
 
-    private static String getUsername(User user) {
+    private String getUsername(User user) {
         String username = null;
         if(user != null){
             username = user.getUsername();
@@ -95,13 +111,17 @@ public class PostController {
 
     private void checkWriterNull(PostCreateDTO dto, User user, boolean loginRequired) {
         if(!loginRequired
-                && isNullNonMemberInfo(dto)
                 && user == null){
-            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "닉네임 또는 비밀번호를 입력해주세요.");
+            checkNullNonMemberInfo(dto);
         }
     }
 
-    private boolean isNullNonMemberInfo(PostCreateDTO dto){
-        return Objects.isNull(dto.getNonMemNick()) || Objects.isNull(dto.getNonMemPw());
+    private void checkNullNonMemberInfo(PostCreateDTO dto){
+        if(dto.getNonMemNick() == null){
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "닉네임을 입력해주세요.");
+        }
+        if(dto.getNonMemPw() == null){
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "비밀번호를 입력해주세요.");
+        }
     }
 }
