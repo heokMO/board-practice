@@ -1,0 +1,1 @@
+create index idx_user_account_id on user(account_id);

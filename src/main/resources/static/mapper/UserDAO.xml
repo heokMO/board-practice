@@ -18,12 +18,19 @@
     <select id="checkGenerateNickname" resultType="boolean">
         SELECT COUNT(*) FROM user WHERE id = #{nickname}
     </select>
+
     <select id="findByAccountId" resultType="com.study.boardflab.mybatis.vo.UserVO">
         SELECT account_id as accountId, password FROM user WHERE account_id = #{username}
     </select>
 
-    <!--    Update    -->
+    <select id="getId" resultType="java.lang.Long">
+        select id from user where account_id = #{username}
+    </select>
+    <select id="getUserName" resultType="java.lang.String">
+        select account_id from user where id = #{id}
+    </select>
 
+    <!--    Update    -->
     <update id="updateUser">
         update user
         set nickname = #{nickname}

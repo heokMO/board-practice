@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.study.boardflab.mybatis.dao.BoardDAO">
+    <insert id="createBoard" useGeneratedKeys="true" keyProperty="id">
+        insert into board (name, login_req, description)
+        values (#{name}, #{loginReq}, #{description})
+    </insert>
+
+
+    <!--    Create    -->
+
+    <!--    Read    -->
+    <select id="isLoginRequired" resultType="java.lang.Boolean">
+        select login_req from board where id = #{boardId}
+    </select>
+
+    <!--    Update    -->
+
+    <!--    Delete    -->
+    <delete id="deleteAll">
+        delete from board;
+    </delete>
+</mapper>

@@ -1,5 +1,6 @@
 package com.study.boardflab.controller;
 
+import com.study.boardflab.dto.messageWrap.SuccessMessageDTO;
 import com.study.boardflab.dto.user.UserCreateDTO;
 import com.study.boardflab.dto.user.UserUpdateDTO;
 import com.study.boardflab.service.UserService;
@@ -25,36 +26,52 @@ public class UserController {
     }
 
     @PostMapping
-    public void create(@RequestBody UserCreateDTO userCreateDTO) {
+    public SuccessMessageDTO create(@RequestBody UserCreateDTO userCreateDTO) {
         userService.create(userCreateDTO);
+
+        return SuccessMessageDTO.builder()
+                .data("username", userCreateDTO.getId())
+                .build();
     }
 
     @GetMapping("/id/{id}")
-    public boolean checkGenerateAccountId(@PathVariable String id){
-        return userService.checkGenerateAccountId(id);
+    public SuccessMessageDTO checkGenerateAccountId(@PathVariable String id){
+
+        return SuccessMessageDTO.builder()
+                .data("canGenerate", userService.checkGenerateAccountId(id))
+                .build();
     }
 
     @GetMapping("/nickname/{nickname}")
-    public boolean checkGenerateNickname(@PathVariable String nickname){
-        return userService.checkGenerateNickname(nickname);
+    public SuccessMessageDTO checkGenerateNickname(@PathVariable String nickname){
+
+        return SuccessMessageDTO.builder()
+                .data("canGenerate", userService.checkGenerateNickname(nickname))
+                .build();
     }
 
 
     @PatchMapping
-    public void updateUser(@RequestBody UserUpdateDTO userUpdateDTO,
+    public SuccessMessageDTO updateUser(@RequestBody UserUpdateDTO userUpdateDTO,
                            @AuthenticationPrincipal User user){
         checkLogin(user);
 
         userService.updateUser(user.getUsername(), userUpdateDTO);
+        return SuccessMessageDTO.builder()
+                .message("Update success")
+                .build();
     }
 
 
 
     @DeleteMapping
-    public void deleteUser(@AuthenticationPrincipal User user){
+    public SuccessMessageDTO deleteUser(@AuthenticationPrincipal User user){
         checkLogin(user);
 
         userService.deleteUser(user.getUsername());
+        return SuccessMessageDTO.builder()
+                .data("deleted username", user.getUsername())
+                .build();
     }
 
     private static void checkLogin(User user) {
