@@ -1,9 +1,12 @@
 package com.study.boardflab.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.study.boardflab.dto.user.UserCreateDTO;
+import com.study.boardflab.dto.user.UserUpdateDTO;
 import com.study.boardflab.mybatis.dao.UserDAO;
 import com.study.boardflab.mybatis.vo.UserVO;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,20 +14,29 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 public class UserControllerTest {
+    private final static String ACCOUNT_ID = "test123";
+    private final static String PASSWORD = "test";
+    private final static String NICKNAME = "test";
+    private final static String EMAIL = "test@sdf.com";
+
+
     @LocalServerPort
     private int port;
 
@@ -40,6 +52,20 @@ public class UserControllerTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @Before
+    public void createTestUser(){
+        UserVO testUser = UserVO.builder()
+                .accountId(ACCOUNT_ID)
+                .password(passwordEncoder.encode(PASSWORD))
+                .nickname(NICKNAME)
+                .email(EMAIL)
+                .build();
+
+        userDAO.create(testUser);
+    }
 
 
     @After
@@ -47,14 +73,15 @@ public class UserControllerTest {
         userDAO.deleteAll();
     }
 
+
     @Test
     public void createTest() throws Exception{
         //given
         String url = "http://localhost:" + port + "/user";
-        String id = "test123";
-        String password = "test";
-        String nickname = "test";
-        String email = "test@sdf.com";
+        String id = ACCOUNT_ID + 1;
+        String password = PASSWORD + 1;
+        String nickname = NICKNAME + 1;
+        String email = EMAIL + 1;
         UserCreateDTO requestDTO = UserCreateDTO.builder()
                 .id(id)
                 .password(password)
@@ -72,21 +99,7 @@ public class UserControllerTest {
     @Test
     public void checkGenerateAccountIdTest() throws Exception{
         //given
-        String accountId = "test123";
-        String password = "test";
-        String nickname = "test";
-        String email = "test@sdf.com";
-
-        UserVO vo = UserVO.builder()
-                .accountId(accountId)
-                .password(password)
-                .nickname(nickname)
-                .email(email)
-                .build();
-
-        userDAO.create(vo);
-
-        String url = "http://localhost:" + port + "/user/id/" + accountId;
+        String url = "http://localhost:" + port + "/user/id/" + ACCOUNT_ID;
 
         //when
         ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
@@ -99,21 +112,7 @@ public class UserControllerTest {
     @Test
     public void checkGenerateNicknameTest() throws Exception{
         //given
-        String accountId = "test123";
-        String password = "test";
-        String nickname = "test";
-        String email = "test@sdf.com";
-
-        UserVO vo = UserVO.builder()
-                .accountId(accountId)
-                .password(password)
-                .nickname(nickname)
-                .email(email)
-                .build();
-
-        userDAO.create(vo);
-
-        String url = "http://localhost:" + port + "/user/nickname/" + nickname;
+        String url = "http://localhost:" + port + "/user/nickname/" + NICKNAME;
 
         //when
         ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
@@ -124,23 +123,34 @@ public class UserControllerTest {
     }
 
     @Test
-    public void LoginTest() throws Exception{
-        String id = "test123";
-        String rawPassword = "test";
-        String encodedPassword = passwordEncoder.encode(rawPassword);
-        String nickname = "test";
-        String email = "test@sdf.com";
+    public void loginTest() throws Exception{
 
-        UserVO vo = UserVO.builder()
-                .accountId(id)
-                .password(encodedPassword)
-                .nickname(nickname)
-                .email(email)
-                .build();
+        mockMvc.perform(formLogin().user(ACCOUNT_ID).password(PASSWORD))
+                .andExpect(authenticated().withUsername(ACCOUNT_ID));
+    }
 
-        userDAO.create(vo);
+    @Test
+    @WithMockUser(username = ACCOUNT_ID, password = PASSWORD)
+    public void updateUserTest() throws Exception{
+        //given
+        String url = "http://localhost:" + port + "/user";
+        UserUpdateDTO dto = new UserUpdateDTO("test123");
 
-        mockMvc.perform(formLogin().user(id).password(rawPassword))
-                .andExpect(authenticated().withUsername(id));
+        //when
+        mockMvc.perform(patch(url).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(dto)))
+        //then
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(username = ACCOUNT_ID, password = PASSWORD)
+    public void deleteUserTest() throws Exception{
+        //given
+        String url = "http://localhost:" + port + "/user";
+
+        //when
+        mockMvc.perform(delete(url))
+        //then
+                .andExpect(status().isOk());
     }
 }

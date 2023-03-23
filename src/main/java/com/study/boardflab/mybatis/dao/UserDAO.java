@@ -5,7 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface UserDAO {
-    Long create(UserVO vo);
+    void create(UserVO vo);
 
     boolean checkGenerateAccountId(String accountId);
 
@@ -14,4 +14,12 @@ public interface UserDAO {
     boolean checkGenerateNickname(String nickname);
 
     UserVO findByAccountId(String username);
+
+    Integer updateUser(UserVO vo);
+
+    Integer deleteUser(String username);
+
+    Long getId(String username);
+
+    String getUserName(Long id);
 }
