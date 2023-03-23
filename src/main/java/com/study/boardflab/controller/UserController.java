@@ -4,17 +4,10 @@ import com.study.boardflab.dto.messageWrap.SuccessMessageDTO;
 import com.study.boardflab.dto.user.UserCreateDTO;
 import com.study.boardflab.dto.user.UserUpdateDTO;
 import com.study.boardflab.service.UserService;
-import org.apache.ibatis.jdbc.SQL;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
-
-import java.sql.SQLException;
 
 @RestController
 @RequestMapping("/user")

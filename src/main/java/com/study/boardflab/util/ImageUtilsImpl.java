@@ -14,7 +14,7 @@ public class ImageUtilsImpl implements ImageUtils {
     public String save(MultipartFile image) throws IOException{
         //TODO: Image Save 구현
 
-        return UUID.randomUUID().toString() + ".jpeg";
+        return UUID.randomUUID() + ".jpeg";
     }
 
     @Override

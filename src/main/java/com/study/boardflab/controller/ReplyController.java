@@ -1,7 +1,10 @@
 package com.study.boardflab.controller;
 
 import com.study.boardflab.dto.messageWrap.SuccessMessageDTO;
-import com.study.boardflab.dto.reply.*;
+import com.study.boardflab.dto.reply.ReplyCreateDTO;
+import com.study.boardflab.dto.reply.ReplyDeleteDTO;
+import com.study.boardflab.dto.reply.ReplyListRequestDTO;
+import com.study.boardflab.dto.reply.ReplyUpdateDTO;
 import com.study.boardflab.service.PostService;
 import com.study.boardflab.service.ReplyService;
 import org.springframework.http.HttpStatus;
@@ -11,7 +14,6 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 
-import java.util.List;
 import java.util.Objects;
 
 @RestController
